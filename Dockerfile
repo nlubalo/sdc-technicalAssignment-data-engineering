@@ -22,7 +22,7 @@ SHELL ["/bin/bash", "-o", "pipefail", "-e", "-u", "-x", "-c"]
 
 WORKDIR $AIRFLOW_HOME
 
-COPY scripts scripts
+#COPY scripts scripts
 #RUN chmod +x scripts
 
 USER $AIRFLOW_UID
