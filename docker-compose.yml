@@ -112,7 +112,7 @@ services:
       MYSQL_PASSWORD: "${MYSQL_PASSWORD}"
       #MYSQL_PWD: "12345"
     healthcheck:
-      test: mysql ${MYSQL_DATABASE} --user=root --password=mauFJcuf5dhRMQrjj --silent --execute "SELECT 1;"
+      test: mysql ${MYSQL_DATABASE} --user=root --password=${MYSQL_PASSWORD} --silent --execute "SELECT 1;"
       #test: ["CMD", "mysqladmin" ,"ping", "-h", "db"]
       #test:["CMD-SHELL", "mysqladmin ping -P 3306 -proot | grep 'mysqld is alive' || exit 1"]
       #test: test: mysqladmin ping -h 127.0.0.1 -u $$MYSQL_USER --password=$$MYSQL_PASSWORD

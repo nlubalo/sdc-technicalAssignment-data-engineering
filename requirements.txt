@@ -1,0 +1,8 @@
+newsapi-python
+pytest
+flake8
+black
+isort
+mypy
+mysql-connector-python
+pymysql
