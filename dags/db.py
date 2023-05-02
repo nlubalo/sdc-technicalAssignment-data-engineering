@@ -17,8 +17,11 @@ class DBConnection:
 class WarehouseConnection:
     def __init__(self, db_conn: DBConnection):
         self.conn_url = pymysql.connect(
-            host="db", user=db_conn.user, password=db_conn.password, database=db_conn.db,
-            autocommit=True
+            host="db",
+            user=db_conn.user,
+            password=db_conn.password,
+            database=db_conn.db,
+            autocommit=True,
         )
 
     @contextmanager
@@ -28,12 +31,12 @@ class WarehouseConnection:
             yield self.curr
         finally:
             self.curr.close()
-            
+
 
 def get_warehouse_credentials() -> DBConnection:
     return DBConnection(
         db=os.getenv("MYSQL_DATABASE", ""),
-        user='root',
+        user="root",
         password=os.getenv("MYSQL_PASSWORD", ""),
         host=os.getenv("MYSQL_HOST", ""),
         port=os.getenv("MYSQL_PORT", ""),
