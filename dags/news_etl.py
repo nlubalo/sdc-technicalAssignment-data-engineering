@@ -1,8 +1,6 @@
 import os
 import csv
 import json
-from typing import Any, Dict, List
-import pymysql
 import pandas as pd
 from newsapi import NewsApiClient
 
