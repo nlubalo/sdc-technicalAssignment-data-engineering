@@ -12,6 +12,8 @@ To run this pipeline, please install the following.
 ### Setup infra
 
 Clone your repository and replace content in the following files
+1. **[env_sample](https://github.com)**: Rename it to .env and replace the values with your credentials
+
 
 Run the following commands in your project directory.
 
@@ -21,6 +23,7 @@ make up # start the docker containers on your computer
 make ci # Runs auto formatting, lint checks, & all the test files under ./tests
 ```
 
+Once airflow is running, create MYSQL connection on airflow web server.
 ## Tear down infrastructure
 
 When done run the command below to tear down the infrastructure
@@ -28,6 +31,7 @@ When done run the command below to tear down the infrastructure
 ```shell
 make down # Stop docker containers on your computer
 ```
+
 
 **Data infrastructure**
 ![DE Infra](/images/infra.png)
@@ -43,7 +47,8 @@ make down # Stop docker containers on your computer
 
 ## Final data structure
 
-The final data structure 
+**Database schema**
+![DE Infra](/images/db.png)
 
 ## Possible next steps.
 * Update the API start date and end dynamically so the pipeline runs at the end of every week and processes previous week's news.
