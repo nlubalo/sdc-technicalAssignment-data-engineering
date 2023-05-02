@@ -75,8 +75,8 @@ make down # Stop docker containers on your computer
 ## Possible next steps.
 * Update the API start date and end dynamically so the pipeline runs at the end of every week and processes previous week's news.
 * Replace the temporary data storage with a database. This will be more efficient when the data volume grows.
-* Add data testing step between the temporary file storage and the datalake.
-* Indentify countries ***
+* Add data testing step between the temporary storage and the datalake
+* set up dbt for analytics users to easily query the data lake database
 
 
 
