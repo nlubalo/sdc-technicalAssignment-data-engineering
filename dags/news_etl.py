@@ -80,29 +80,32 @@ def get_content(article, author_id, source_id):
         # "table": [author_id, source_id, title, url, published_date],
         "blob": {
             "date": published_date[:-10],
-            "content": [{
-                "id": blob_id,
-                "datetime": published_date,
-                "description": description,
-                "content": content,
-            },]
+            "content": [
+                {
+                    "id": blob_id,
+                    "datetime": published_date,
+                    "description": description,
+                    "content": content,
+                },
+            ],
         },
     }
 
 
 def fetch_all_pages(api_key, start_date, end_date, pages):
-    articles={"content":[]}
+    articles = {"content": []}
     for page in range(1, pages + 1):
         all_article = fetch_page(api_key, start_date, end_date, page)
         for article in all_article["articles"]:
             source_name = get_sources(article)
             author_name = get_authors(article)
             all_articles = get_content(article, author_name, source_name)
-            articles['content'].append(all_articles['blob']['content'][0])
+            articles["content"].append(all_articles["blob"]["content"][0])
             # Save to blob location
-            with open("/home/airflow/data/blob/"+all_articles['blob']['date']+'.json', 'w') as outfile:
+            with open(
+                "/home/airflow/data/blob/" + all_articles["blob"]["date"] + ".json", "w"
+            ) as outfile:
                 json.dump(articles, outfile)
-
 
 
 def load_dimension_data(filename, insert_query):
