@@ -58,13 +58,12 @@ def get_authors(article):
     author_name = article.get("author")
     if isinstance(author_name, type(None)):
         author_name = "Anonymous"
-    save_to_csv([author_name.lower(), author_name], "authors.csv")
+    save_to_csv([author_name.lower(), author_name], "/home/airflow/data/authors.csv")
     return author_name.lower()
 
 
 def get_content(article, author_id, source_id):
     """
-    
     Get the main content of the news for the fact table and saves it to temporary locations
     and returns data to be saved to the blob storage
     """
@@ -74,7 +73,10 @@ def get_content(article, author_id, source_id):
     url = article.get("url")
     published_date = article.get("publishedAt")
     content = article.get("content")
-    save_to_csv([author_id, source_id, title, url, published_date], "articles.csv")
+    save_to_csv(
+        [author_id, source_id, title, url, published_date],
+        "/home/airflow/data/articles.csv",
+    )
     return {
         # "table": [author_id, source_id, title, url, published_date],
         "blob": {
@@ -99,6 +101,16 @@ def fetch_all_pages(api_key, start_date, end_date, pages):
 
 
 def load_dimension_data(filename, insert_query):
+    """
+    Read dimension table data (authors and sources) from
+    temporary location and load to the data lake tables
+    """
+    df = pd.read_csv(filename).drop_duplicates(keep="last")
+    for _, row in df.iterrows():
+        send_data_to_destination([(row[0], row[1])], insert_query)
+
+
+def load_fact_table_data(filename, insert_query):
     """
     Read dimension table data (authors and sources) from
     temporary location and load to the data lake tables
