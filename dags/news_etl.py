@@ -1,5 +1,6 @@
 import os
 import csv
+import json
 from typing import Any, Dict, List
 import pymysql
 import pandas as pd
@@ -81,23 +82,29 @@ def get_content(article, author_id, source_id):
         # "table": [author_id, source_id, title, url, published_date],
         "blob": {
             "date": published_date[:-10],
-            "content": {
+            "content": [{
                 "id": blob_id,
                 "datetime": published_date,
                 "description": description,
                 "content": content,
-            },
+            },]
         },
     }
 
 
 def fetch_all_pages(api_key, start_date, end_date, pages):
+    articles={"content":[]}
     for page in range(1, pages + 1):
         all_article = fetch_page(api_key, start_date, end_date, page)
         for article in all_article["articles"]:
             source_name = get_sources(article)
             author_name = get_authors(article)
             all_articles = get_content(article, author_name, source_name)
+            articles['content'].append(all_articles['blob']['content'][0])
+            # Save to blob location
+            with open("/home/airflow/data/blob/"+all_articles['blob']['date']+'.json', 'w') as outfile:
+                json.dump(articles, outfile)
+
 
 
 def load_dimension_data(filename, insert_query):
@@ -110,7 +117,8 @@ def load_dimension_data(filename, insert_query):
         send_data_to_destination([(row[0], row[1])], insert_query)
 
 
-#[author_id, source_id, title, url, published_date]
+# [author_id, source_id, title, url, published_date]
+
 
 def load_fact_table_data(filename, insert_query):
     """
@@ -119,7 +127,9 @@ def load_fact_table_data(filename, insert_query):
     """
     df = pd.read_csv(filename).drop_duplicates(keep="last")
     for _, row in df.iterrows():
-        send_data_to_destination([(row[0], row[1], row[2], row[3], row[4])], insert_query)
+        send_data_to_destination(
+            [(row[0], row[1], row[2], row[3], row[4])], insert_query
+        )
 
 
 ######### Helper functions ######################
@@ -139,3 +149,6 @@ def save_to_csv(data, filename):
 def delete_if_exists(filename):
     if os.path.exists(filename):
         os.remove(filename)
+
+
+fetch_all_pages("e5e8cd2d29a94180929586d37481eae8", "2023-04-23", "2023-04-30", 5)

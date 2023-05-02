@@ -5,7 +5,12 @@ from airflow import DAG
 from airflow.operators.mysql_operator import MySqlOperator
 from airflow.operators.python_operator import PythonOperator
 
-from news_etl import fetch_all_pages, load_dimension_data, delete_if_exists,load_fact_table_data
+from news_etl import (
+    fetch_all_pages,
+    load_dimension_data,
+    delete_if_exists,
+    load_fact_table_data,
+)
 
 
 default_args = {"owner": "airflow", "start_date": datetime(2023, 4, 27)}
