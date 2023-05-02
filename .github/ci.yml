@@ -1,5 +1,7 @@
 name: ci
 on: [push]
+branches:
+
 jobs:
   run-ci-tests:
     runs-on: ubuntu-latest
