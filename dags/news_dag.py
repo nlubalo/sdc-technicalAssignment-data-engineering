@@ -5,7 +5,7 @@ from airflow import DAG
 from airflow.operators.mysql_operator import MySqlOperator
 from airflow.operators.python_operator import PythonOperator
 
-from news_etl import fetch_all_pages, load_dimension_data, delete_if_exists
+from news_etl import fetch_all_pages, load_dimension_data, delete_if_exists,load_fact_table_data
 
 
 default_args = {"owner": "airflow", "start_date": datetime(2023, 4, 27)}
@@ -79,6 +79,15 @@ load_authors_data_task = PythonOperator(
     },
     dag=newsapi_dag,
 )
+load_articles_data_task = PythonOperator(
+    task_id="load_articles_data",
+    python_callable=load_fact_table_data,
+    op_kwargs={
+        "filename": "/home/airflow/data/articles.csv",
+        "insert_query": """INSERT IGNORE INTO newsDb.articles (authorID, sourceID, title, url, publishedDate) VALUES (%s, %s, %s, %s, %s)""",
+    },
+    dag=newsapi_dag,
+)
 
 
-create_tables >> delete_source_file_task >> delete_authors_file_task >> delete_articles_file_task >> extract_and_transform_task >> load_source_data_task >> load_authors_data_task
+create_tables >> delete_source_file_task >> delete_authors_file_task >> delete_articles_file_task >> extract_and_transform_task >> load_source_data_task >> load_authors_data_task >> load_articles_data_task

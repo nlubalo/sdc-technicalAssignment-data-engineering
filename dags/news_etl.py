@@ -110,14 +110,16 @@ def load_dimension_data(filename, insert_query):
         send_data_to_destination([(row[0], row[1])], insert_query)
 
 
+#[author_id, source_id, title, url, published_date]
+
 def load_fact_table_data(filename, insert_query):
     """
-    Read dimension table data (authors and sources) from
+    Read fact table data (articles) from
     temporary location and load to the data lake tables
     """
     df = pd.read_csv(filename).drop_duplicates(keep="last")
     for _, row in df.iterrows():
-        send_data_to_destination([(row[0], row[1])], insert_query)
+        send_data_to_destination([(row[0], row[1], row[2], row[3], row[4])], insert_query)
 
 
 ######### Helper functions ######################
